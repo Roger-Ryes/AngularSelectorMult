@@ -2,6 +2,8 @@
 <hr>
 
 <form [formGroup]="myForm" (ngSubmit)="save()">
+    
+    <!-- Continent -->
     <div class="row mb-3">
         <div class="col">
             <label class="form-label">Continente</label>
@@ -9,11 +11,24 @@
                     formControlName="region">
                 <option value="">-- Seleccione Continente --</option>
                 <option *ngFor="let item of regions"
-                value="item | lowercase">{{ item }}</option>
+                        [value]="item|lowercase">{{ item }}</option>
             </select>
         </div>
     </div>
-
+    
+    <!-- Country -->
+    <div class="row mb-3">
+        <div class="col">
+            <label class="form-label">Pais</label>
+            <select class="form-control"
+                    formControlName="country">
+                <option value="">-- Seleccione el pais --</option>
+                <option *ngFor="let item of countries"
+                        [value]="item.cca2|lowercase">{{ item.name.common }}</option>
+            </select>
+        </div>
+    </div>
+    
     <div class="row">
         <div class="col">
             <button class="btn btn-primary float-end"
@@ -25,4 +40,5 @@
 </form>
 
 <h3>form</h3>
-<pre>{{myForm.valid|json}}</pre>
+<pre>valid: {{myForm.valid|json}}</pre>
+<pre>value: {{myForm.value|json}}</pre>

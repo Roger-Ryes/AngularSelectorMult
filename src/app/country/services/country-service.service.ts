@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CountrySmall } from '../interfaces/countries.interface';
+import { Observable, of } from 'rxjs';
+import { CountrySmall, Country } from '../interfaces/countries.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class CountryService {
   getCountryByRegion(region: string){
     const url: string = `${ this.urlBase }/region/${ region }?fields=name,cca2`;
     return this.http.get<CountrySmall[]>( url );
+  }
+ 
+  getBoundaryByCode(code: string):Observable<Country[]|[]>{
+    if(code.length==0){
+      return of([]);
+    }
+    const url: string = `${ this.urlBase }/alpha/${ code }`;
+    return this.http.get<Country[]>( url );
   }
 
 }

@@ -17,7 +17,7 @@
     </div>
     
     <!-- Country -->
-    <div class="row mb-3">
+    <div class="row mb-3" *ngIf="countries.length!==0">
         <div class="col">
             <label class="form-label">Pais</label>
             <select class="form-control"
@@ -29,6 +29,27 @@
         </div>
     </div>
     
+    <!-- boundary -->
+    <div class="row mb-3" *ngIf="countriesBoundary.length!==0">
+        <div class="col">
+            <label class="form-label">Frontera</label>
+            <select class="form-control"
+                    formControlName="boundary">
+                <option value="">-- Seleccionar el pais fronterizo --</option>
+                <option *ngFor="let item of countriesBoundary, let i = index"
+                        [value]="item">{{ item }}</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row" *ngIf="load">
+        <div class="col">
+            <div class="alert alert-primary">
+                Cargando...
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <button class="btn btn-primary float-end"
@@ -42,3 +63,4 @@
 <h3>form</h3>
 <pre>valid: {{myForm.valid|json}}</pre>
 <pre>value: {{myForm.value|json}}</pre>
+<pre>valueChanged: {{myForm.value|json}}</pre>

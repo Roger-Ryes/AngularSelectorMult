@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { switchMap, tap } from 'rxjs/operators';
-import { CountrySmall } from '../../interfaces/countries.interface';
+import { CountrySmall, Country } from '../../interfaces/countries.interface';
 import { CountryService } from '../../services/country-service.service';
 
 @Component({
@@ -13,11 +13,14 @@ export class SelectorPageComponent implements OnInit {
 
   regions: string[] = [];
   countries: CountrySmall[]=[];
+  countriesBoundary: String[]|[]=[];
+  
+  load:boolean = false;
 
   myForm: FormGroup = this.fb.group({
     region: ['', [Validators.required]],
     country: ['', [Validators.required]],
-
+    boundary: ['', [Validators.required]]
   });
 
   constructor(
@@ -37,11 +40,31 @@ export class SelectorPageComponent implements OnInit {
     // })
     this.myForm.get("region")?.valueChanges
     .pipe( 
-      tap( (_)=>{ this.myForm.get("country")?.reset("") } ),
+      tap( 
+        (_)=>{ 
+          this.myForm.get("country")?.reset(""); 
+          this.load = true;
+        }
+      ),
       switchMap( region => this.countServic.getCountryByRegion(region)))
     .subscribe(
-      countries=>{ this.countries = countries; }
+      countries=>{ 
+        this.countries = countries;
+        this.load = false;
+       }
     );
+
+
+    this.myForm.get("country")?.valueChanges
+    .pipe(
+      tap( ()=>{
+        this.countriesBoundary = [];
+        this.myForm.get("boundary")?.reset("");
+      } ),
+      switchMap( resp=> this.countServic.getBoundaryByCode(resp)))
+    .subscribe( resp=>{
+      this.countriesBoundary = resp[0].borders || [];
+    });
   }
 
   save(){

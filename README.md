@@ -32,3 +32,23 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - Rest Countries
     https://restcountries.com/
 # AngularSelectorMult
+
+## Uso de switchMap y tap
+
+    // Codigo para obtener datos del formGroup y pasar a un servicio
+    this.myForm.get("region")?.valueChanges.subscribe(resp=>{
+        this.countServic.getCountryByRegion(resp)
+        .subscribe(countries=>{
+            this.countries = countries;
+        })
+    })
+
+
+    // La misma funcion pero mas leible
+    this.myForm.get("region")?.valueChanges
+    .pipe( 
+        tap( (_)=>{ this.myForm.get("country")?.reset("") } ),
+        switchMap( region => this.countServic.getCountryByRegion(region)))
+    .subscribe(
+        countries=>{ this.countries = countries; }
+    );
